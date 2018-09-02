@@ -1,0 +1,5 @@
+.rows .row {
+    display: inline-block;
+    padding: 50px;
+    margin: auto;
+}

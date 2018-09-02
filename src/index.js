@@ -1,9 +1,20 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-//import './index.css';
-import App from './App';
-import registerServiceWorker from './registerServiceWorker';
-//import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import App from './components';
+import { BrowserRouter } from 'react-router-dom'
 
-ReactDOM.render(<App />, document.getElementById('root'));
+import registerServiceWorker from './registerServiceWorker';
+import './index.css';
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+
+const theme = createMuiTheme();
+
+ReactDOM.render(
+  <MuiThemeProvider theme={theme}>
+    <BrowserRouter>
+    <App/>
+    </BrowserRouter>
+  </MuiThemeProvider>,
+  document.getElementById('root')
+);
 registerServiceWorker();

@@ -1,9 +1,9 @@
-import firebase from '../config/constants';
+import firebase from '../../config/constants';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import PostCard from './PostCard';
-import './idk.css';
+import PostCard from '../PostCard';
+import '../idk.css';
 
 const styles = {
   card: {
@@ -15,7 +15,7 @@ const styles = {
   },
 };
 
-class Home extends Component {
+class Followed extends Component {
   classes = {};
 
   constructor(props) {
@@ -24,8 +24,39 @@ class Home extends Component {
     this.state = {
       currentUser: {},
       posts: {},
-      users: {}
+      users: {},
+      followers: {}
     };
+  }
+
+  verifyFollow(post) {
+    if (post.privacy === 'private') {
+      // post is private
+      return false;
+    }
+
+    if (!this.state.followers) {
+      // there are no followers in the db yet
+      return false;
+    }
+
+    if (!(post.uid in this.state.followers)) {
+      // user doesn't have followers
+      return false;
+    }
+
+    if (!(this.state.currentUser.uid in this.state.followers[post.uid])) {
+      // we are not following him
+      return false;
+    }
+
+    if (this.state.followers[post.uid][this.state.currentUser.uid] === false) {
+      // we stopped following him
+      return false;
+    }
+
+    // we are following him
+    return true;
   }
 
   sortByDate(arr) {
@@ -47,8 +78,8 @@ class Home extends Component {
     if (this.state.posts) {
       for (let key in this.state.posts) {
         let post = this.state.posts[key];
-        // only show public posts
-        if (post.privacy === 'public') {
+        // only show posts by users you're following
+        if (this.verifyFollow(post)) {
           result.push(<PostCard
             key={key}
             postid={key}
@@ -108,6 +139,12 @@ class Home extends Component {
       this.setState({ users: snap.val() });
     });
 
+    // followers
+    this.dbRefFollowers = firebase.database().ref('/followers');
+    this.dbCallbackFollowers = this.dbRefFollowers.on('value', (snap) => {
+      this.setState({ followers: snap.val() });
+    });
+
     // other verifications
     var user = firebase.auth().currentUser;
     if (user) {
@@ -120,11 +157,13 @@ class Home extends Component {
     this.dbRefPosts.off('value', this.dbCallbackPosts);
     // users
     this.dbRefUsers.off('value', this.dbCallbackUsers);
+    // followers
+    this.dbRefFollowers.off('value', this.dbCallbackFollowers);
   }
 }
 
-Home.propTypes = {
+Followed.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(Home);
+export default withStyles(styles)(Followed);

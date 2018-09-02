@@ -1,9 +1,9 @@
-import firebase from '../config/constants';
+import firebase from '../../config/constants';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import PostCard from './PostCard';
-import './idk.css';
+import PostCard from '../PostCard';
+import '../idk.css';
 
 const styles = {
   card: {
@@ -15,7 +15,7 @@ const styles = {
   },
 };
 
-class Home extends Component {
+class MyPosts extends Component {
   classes = {};
 
   constructor(props) {
@@ -26,6 +26,16 @@ class Home extends Component {
       posts: {},
       users: {}
     };
+  }
+
+  verifyPrivate(post) {
+    if (post.uid !== this.state.currentUser.uid) {
+      // the post wasn't made by you
+      return false;
+    }
+
+    // the post was made by you
+    return true;
   }
 
   sortByDate(arr) {
@@ -47,8 +57,8 @@ class Home extends Component {
     if (this.state.posts) {
       for (let key in this.state.posts) {
         let post = this.state.posts[key];
-        // only show public posts
-        if (post.privacy === 'public') {
+        // only show posts you've made
+        if (this.verifyPrivate(post)) {
           result.push(<PostCard
             key={key}
             postid={key}
@@ -123,8 +133,8 @@ class Home extends Component {
   }
 }
 
-Home.propTypes = {
+MyPosts.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(Home);
+export default withStyles(styles)(MyPosts);
