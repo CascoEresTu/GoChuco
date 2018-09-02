@@ -26,6 +26,7 @@ export default class Login extends Component {
       this.setState(setErrorMsg('Invalid username/password.'));
     });
   };
+
   resetPassword = () => {
     resetPassword(this.state.email)
       .then(() =>
@@ -35,9 +36,10 @@ export default class Login extends Component {
       )
       .catch(error => this.setState(setErrorMsg(`Email address not found.`)));
   };
+
   render() {
     return (
       <StyledFirebaseAuth uiConfig={firebaseUI} firebaseAuth={firebaseAuth()}/>
-          );
+    );
   }
 }

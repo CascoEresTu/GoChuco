@@ -130,7 +130,7 @@ class App extends Component {
     ) : (
           <div className={this.classes.root}>
 
-            <AppBar position="static"  >
+            <AppBar position="static">
               <Toolbar>
                 <IconButton  className={this.classes.menuButton} color="inherit" aria-label="Menu">
                   <MenuIcon />
@@ -140,7 +140,6 @@ class App extends Component {
                 </Typography>
                   {topbarButtons}
               </Toolbar>
-
             </AppBar>
             <br/>
             <br/>
