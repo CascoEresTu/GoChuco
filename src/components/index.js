@@ -3,11 +3,9 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { Route, Link, Redirect, Switch } from 'react-router-dom';
 import Login from './Login';
-// import Register from './Register';
-import Home from './Home';
-import Followed from './protected/Followed';
-import MyPosts from './protected/MyPosts';
-import Dashboard from './protected/Dashboard';
+import Inicio from './Inicio';
+import Catalogo from './protected/Catalogo';
+import Carretita from './protected/Carretita';
 import { logout } from '../helpers/auth';
 import { firebaseAuth } from '../config/constants';
 import AppBar from '@material-ui/core/AppBar';
@@ -61,17 +59,19 @@ function PublicRoute({ component: Component, authed, ...rest }) {
 }
 
 class App extends Component {
-  classes = {}
-  constructor(props){
-    super(props);
-    //const { classes } = this.props;
-    this.classes = this.props.classes;
-  }
+  classes = {};
 
   state = {
     authed: false,
     loading: true
   };
+
+
+  constructor(props){
+    super(props);
+    this.classes = this.props.classes;
+  }
+
   componentDidMount() {
     // see if user is logged in
     this.removeListener = firebaseAuth().onAuthStateChanged(user => {
@@ -99,8 +99,7 @@ class App extends Component {
         label="Logout"
         onClick={() => {
           logout();
-          // TODO recargar la pagina cuando haga logout
-          // this.setState({});
+          this.setState(this.state);
         }}
         style={{ color: '#fff' }}
       >Logout</Button>
@@ -109,25 +108,19 @@ class App extends Component {
           <Link to="/login">
             <Button style={{ color: '#fff' }} >Login</Button>
           </Link>
-          {/* <Link to="/register">
-            <Button style={{ color: '#fff' }} >Register</Button>
-          </Link> */}
         </span>
       );
 
     const topbarButtons = (
       <div>
         <Link to="/" color="inherit">
-          <Button style={{ color: '#fff' }}>Home</Button>
+          <Button style={{ color: '#fff' }}>Inicio</Button>
         </Link>
-        <Link to="/followed">
-          <Button  style={{ color: '#fff' }} >Followed</Button>
+        <Link to="/catalogo">
+          <Button style={{ color: '#fff' }}>Catalogo</Button>
         </Link>
-        <Link to="/myposts">
-          <Button  style={{ color: '#fff' }} >My Posts</Button>
-        </Link>
-        <Link to="/dashboard">
-          <Button  style={{ color: '#fff' }} >Dashboard</Button>
+        <Link to="/carretita">
+          <Button style={{ color: '#fff' }} >Carretita</Button>
         </Link>
         {authButtons}
       </div>
@@ -154,33 +147,23 @@ class App extends Component {
             <div className="container-fluid justify-content-center d-flex mt-12">
               <div >
                 <Switch>
-                  <Route path="/" exact component={Home} />
+                  <Route path="/" exact component={Inicio} />
                   <PublicRoute
                     authed={this.state.authed}
                     path="/login"
                     component={Login}
                   />
-                  {/* <PublicRoute
-                    authed={this.state.authed}
-                    path="/register"
-                    component={Register}
-                  /> */}
                   <PrivateRoute
                     authed={this.state.authed}
-                    path="/followed"
-                    component={Followed}
+                    path="/catalogo"
+                    component={Catalogo}
                   />
                   <PrivateRoute
                     authed={this.state.authed}
-                    path="/myposts"
-                    component={MyPosts}
+                    path="/carretita"
+                    component={Carretita}
                   />
-                  <PrivateRoute
-                    authed={this.state.authed}
-                    path="/dashboard"
-                    component={Dashboard}
-                  />
-                  <Route render={() => <h3>No aaaa Match</h3>} />
+                  <Route render={() => <h3>Quejesto</h3>} />
                 </Switch>
               </div>
             </div>
