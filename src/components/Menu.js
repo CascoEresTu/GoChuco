@@ -126,7 +126,7 @@ class Home extends Component {
   */
 }
 
-Home.propTypes = {
+Menu.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 

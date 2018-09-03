@@ -10,7 +10,6 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import CachedIcon from '@material-ui/icons/Cached';
 import TextField from '@material-ui/core/TextField';
 import firebase from '../config/constants';
-import Comment from './Comment';
 import './idk.css';
 
 class MenuItem extends Component {
@@ -26,49 +25,16 @@ class MenuItem extends Component {
       title: '',
       body:  '',
       price: '',
-      commentDraft: ''
+      //commentDraft: ''
     };
   }
 
-  
 
   userIsLogged() {
     // if this.state.currentUser is {} then...
     return Object.keys(this.state.currentUser).length !== 0
       || this.state.currentUser.constructor !== Object;
   }
-
-  getActionIcons() {
-    var icons = [];
-
-    // only show delete option for the respective authors
-    if (this.state.uid === this.state.currentUser.uid) {
-      icons.push(
-        <IconButton key='delete' onClick={this.handleDelete}>
-          <DeleteIcon />
-        </IconButton>
-      );
-    }
-    // only show star option if the user is logged in
-    if (this.userIsLogged()) {
-      icons.push(
-        <IconButton key='star' onClick={this.handleStars}>
-          <StarIcon />
-        </IconButton>
-      );
-      icons.push(
-        <IconButton key='repost' onClick={this.handleRepost}>
-          <CachedIcon />
-        </IconButton>
-      );
-    }
-    return (
-      <div>
-        {icons}
-      </div>
-    );
-  }
-
 
   render() {
     
@@ -86,9 +52,6 @@ class MenuItem extends Component {
                 className={this.classes.avatar}
               />
             }
-            action={this.getActionIcons()}
-            title={this.state.author}
-            subheader={'Star count: ' + (this.state.stars ? this.countStars() : 0)}
           />
         <CardContent>
           <Typography gutterBottom variant="headline" component="h2">
@@ -100,11 +63,6 @@ class MenuItem extends Component {
           <Typography component="p">
             {this.state.price}
           </Typography>
-
-          <br/>
-          {comments}
-          <br/>
-          {this.getCommentField()}
         </CardContent>
         {this.getActionCards()}
       </Card>

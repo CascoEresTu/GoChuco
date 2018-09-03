@@ -129,9 +129,9 @@ class App extends Component {
     return this.state.loading === true ? (
       <h1>Loading</h1>
     ) : (
-          <div className={this.classes.root}>
+          <div className={this.classes.root} style={{ backgroundColor: '#F6BB42' }}>
 
-            <AppBar position="static">
+            <AppBar position="static" style={{ backgroundColor: '#cc0000' }}>
               <Toolbar>
                 <IconButton  className={this.classes.menuButton} color="inherit" aria-label="Menu">
                   <MenuIcon />
