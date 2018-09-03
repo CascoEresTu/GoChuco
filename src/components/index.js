@@ -6,6 +6,7 @@ import Login from './Login';
 import Inicio from './Inicio';
 import Catalogo from './protected/Catalogo';
 import Carretita from './protected/Carretita';
+import Checkout from './protected/Checkout';
 import { logout } from '../helpers/auth';
 import { firebaseAuth } from '../config/constants';
 import AppBar from '@material-ui/core/AppBar';
@@ -161,6 +162,11 @@ class App extends Component {
                     authed={this.state.authed}
                     path="/carretita"
                     component={Carretita}
+                  />
+                  <PrivateRoute
+                    authed={this.state.authed}
+                    path="/checkout"
+                    component={Checkout}
                   />
                   <Route render={() => <h3>Quejesto</h3>} />
                 </Switch>

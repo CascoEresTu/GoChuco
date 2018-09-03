@@ -4,6 +4,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
+import { Link } from 'react-router-dom';
 import Orden from '../Orden';
 import '../idk.css';
 
@@ -30,9 +31,6 @@ class Carretita extends Component {
   }
 
   handleCheckout() {
-    // TODO: Checkout
-    // Toma todas las ordenes del usuario y las guarda al nodo de ordenes
-    // en la base de datos
   }
 
   render() {
@@ -53,9 +51,11 @@ class Carretita extends Component {
               <Orden/>
               <Orden/>
             </div>
-            <Button size="small" color="primary" onClick={this.handleCheckout}>
-              Hacer Checkout
-            </Button>
+            <Link to="/checkout">
+              <Button size="small" color="primary" onClick={this.handleCheckout}>
+                Checkout
+              </Button>
+            </Link>
           </Paper>
         </Grid>
       </Grid>

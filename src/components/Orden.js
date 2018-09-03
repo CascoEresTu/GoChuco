@@ -31,9 +31,6 @@ class Orden extends Component {
       <div className='row' dateTime={'this.state.datetime.toString()'}>
         <Card className={this.classes.card}>
           <CardHeader
-            subheader='Codigo de orden #1234'
-          />
-          <CardHeader
             avatar={
               <Avatar
                 alt="Remy Sharp"
@@ -42,17 +39,16 @@ class Orden extends Component {
               />
             }
             action={this.getActionIcons()}
-            title={'this.state.author'}
-            subheader={'Star count: ?'}
+            title={'Nombre del restaurante'}
+            subheader={'Codigo de orden #1234'}
           />
         <CardContent>
           <Typography gutterBottom variant="headline" component="h2">
-            {'this.state.title'}
+            {'Nombre de la orden'}
           </Typography>
           <Typography component="p">
-            {'this.state.body'}
+            {'Descripcion de la orden'}
           </Typography>
-          <br/>
           <br/>
         </CardContent>
       </Card>
