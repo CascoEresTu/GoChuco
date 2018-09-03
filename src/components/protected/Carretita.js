@@ -34,10 +34,6 @@ class Carretita extends Component {
   }
 
   render() {
-    // TODO:
-    // Mostrar tarjetas con todas las ordenes del usuario
-    // Se pueden eliminar las tarjetas (boton X)
-    // Se puede hacer un checkout (boton Checkout)
     const { classes } = this.props;
     const { spacing } = this.state;
 
