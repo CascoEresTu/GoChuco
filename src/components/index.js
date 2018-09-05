@@ -5,6 +5,7 @@ import { Route, Link, Redirect, Switch } from 'react-router-dom';
 import Login from './Login';
 import Inicio from './Inicio';
 import Catalogo from './protected/Catalogo';
+import Favoritos from './protected/Favoritos';
 import Carretita from './protected/Carretita';
 import Checkout from './protected/Checkout';
 import { logout } from '../helpers/auth';
@@ -53,7 +54,7 @@ function PublicRoute({ component: Component, authed, ...rest }) {
         authed === false ? (
           <Component {...props} />
         ) : (
-            <Redirect to="/dashboard" />
+            <Redirect to="/" />
           )}
     />
   );
@@ -120,6 +121,9 @@ class App extends Component {
         <Link to="/catalogo">
           <Button style={{ color: '#fff' }}>Catalogo</Button>
         </Link>
+        <Link to="/favoritos">
+          <Button style={{ color: '#fff' }}>Favoritos</Button>
+        </Link>
         <Link to="/carretita">
           <Button style={{ color: '#fff' }} >Carretita</Button>
         </Link>
@@ -157,6 +161,11 @@ class App extends Component {
                     authed={this.state.authed}
                     path="/catalogo"
                     component={Catalogo}
+                  />
+                  <PrivateRoute
+                    authed={this.state.authed}
+                    path="/favoritos"
+                    component={Favoritos}
                   />
                   <PrivateRoute
                     authed={this.state.authed}

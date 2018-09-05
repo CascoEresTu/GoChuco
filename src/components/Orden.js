@@ -15,6 +15,11 @@ class Orden extends Component {
     super(props);
     this.getActionIcons = this.getActionIcons.bind(this);
     this.state = {
+      codigo: '',
+      nombre: '',
+      descripcion: '',
+      nombreRestaurante: '',
+      urlImagen: ''
     };
   }
 

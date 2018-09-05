@@ -30,6 +30,12 @@ class Restaurante extends Component {
     this.getActionButtons = this.getActionButtons.bind(this);
     this.classes = props.classes;
     this.state = {
+      codigo: '',
+      nombre: '',
+      direccion: '',
+      ratingPos: '',
+      ratingNeg: '',
+      urlImagen: ''
     };
   }
 
@@ -80,7 +86,7 @@ class Restaurante extends Component {
             {'Nombre del restaurante'}
           </Typography>
           <Typography component="p">
-            {'Plato mas popular'}
+            {'Rating'}
           </Typography>
           <br/>
         </CardContent>
