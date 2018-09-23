@@ -36,7 +36,7 @@ class Home extends Component {
         if (MenuItem.privacy == 0) {
           result.push(
             <div>
-              <Post
+              <MenuItem
                 key={key}
                 postid={key}
                 currentUser={this.state.currentUser}
@@ -54,7 +54,7 @@ class Home extends Component {
       return result;
     } else {
       return (
-        <div>Be the first one to MenuItem on the dashboard!</div>
+        <div> No tienes suculencias que ofrecer! D:  </div>
       );
     }
 

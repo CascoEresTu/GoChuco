@@ -12,6 +12,7 @@ import StarIcon from '@material-ui/icons/Star';
 import TextField from '@material-ui/core/TextField';
 import firebase from '../config/constants';
 import './idk.css';
+import Menu from 'Menu'
 
 const styles = {
   card: {
@@ -35,7 +36,8 @@ class Restaurante extends Component {
       direccion: '',
       ratingPos: '',
       ratingNeg: '',
-      urlImagen: ''
+      urlImagen: '',
+      Menu: this.props.Menu
     };
   }
 
