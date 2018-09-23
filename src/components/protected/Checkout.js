@@ -47,15 +47,18 @@ class Checkout extends Component {
         <Grid item>
           <Paper className={classes.control}>
             <h2>Checkout</h2>
-            {/* <form onSubmit={this.handleSubmit}>
-              Algo:
+            <form onSubmit={this.handleSubmit}>
+              <b>Algo:</b>
+              <br/>
               <TextField
                 hinttext="Algo"
                 floatinglabeltext="Algo"
                 onChange={(event) => this.setState({ email: event.target.value })}
               />
               <br />
-              Otro:
+              <br />
+              <b>Otro:</b>
+              <br/>
               <TextField
                 type="password"
                 hinttext="Otro"
@@ -75,7 +78,7 @@ class Checkout extends Component {
               )}
               <br/>
               <Button type="submit">Confirmar</ Button>
-            </form> */}
+            </form>
           </Paper>
         </Grid>
       </Grid>
