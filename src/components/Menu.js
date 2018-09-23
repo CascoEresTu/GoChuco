@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import MenuItem from './MenuItem';
 
-
 const styles = {
   card: {
     maxWidth: 345,
@@ -37,7 +36,7 @@ class Home extends Component {
         if (MenuItem.privacy == 0) {
           result.push(
             <div>
-              <MenuItem
+              <Post
                 key={key}
                 postid={key}
                 currentUser={this.state.currentUser}
@@ -55,7 +54,7 @@ class Home extends Component {
       return result;
     } else {
       return (
-        <div> No tienes suculencias que ofrecer! D:  </div>
+        <div>Be the first one to MenuItem on the dashboard!</div>
       );
     }
 

@@ -5,7 +5,6 @@ import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Restaurante from '../Restaurante';
 import firebase from '../../config/constants';
-import Typography from '@material-ui/core/Typography';
 
 const styles = theme => ({
   root: {
@@ -23,9 +22,30 @@ const styles = theme => ({
 class Catalogo extends Component {
   constructor(props) {
     super(props);
+    this.getRestaurantes = this.getRestaurantes.bind(this);
     this.state = {
-      spacing: '16'
+      spacing: '16',
+      restaurantes: {},
     };
+  }
+
+  getRestaurantes() {
+    var resultado = [];
+
+    for (let key in this.state.restaurantes) {
+      resultado.push(
+        <Restaurante
+          key={key}
+          codigo={key}
+          nombre={this.state.restaurantes[key].nombre}
+          direccion={this.state.restaurantes[key].direccion}
+          rating={this.state.restaurantes[key].rating}
+          urlImagen={this.state.restaurantes[key].urlImagen}
+        />
+      );
+    }
+
+    return resultado;
   }
 
   render() {
@@ -38,9 +58,7 @@ class Catalogo extends Component {
           <Paper className={classes.control}>
             <h2>Catalogo</h2>
             <div className='rows'>
-              <Restaurante/>
-              <Restaurante/>
-              <Restaurante/>
+              {this.getRestaurantes()}
             </div>
           </Paper>
         </Grid>
@@ -74,9 +92,17 @@ class Catalogo extends Component {
     if (user) {
       this.setUser(user);
     }
+
+    // restaurantes
+    this.dbRefRestaurantes = firebase.database().ref('/restaurantes');
+    this.dbCallbackRestaurantes = this.dbRefRestaurantes.on('value', (snap) => {
+      this.setState({ restaurantes: snap.val() });
+    });
   }
 
   componentWillUnmount() {
+    // restaurantes
+    this.dbRefRestaurantes.off('value', this.dbCallbackRestaurantes);
   }
 }
 

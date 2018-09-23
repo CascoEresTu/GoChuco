@@ -29,18 +29,31 @@ class NuevoRestaurante extends Component {
     this.state = {
       spacing: '16',
       registerError: null,
-      phoneNumber: '',
-      password: '',
-      monto: 0.0
+      direccion: '',
+      urlImagen: '',
+      nombre: '',
     };
   }
 
   handleSubmit(event) {
     event.preventDefault();
+    const newRest = {
+      direccion: this.state.direccion,
+      urlImagen: this.state.urlImagen,
+      nombre: this.state.nombre,
+      rating: {
+        positivas: 1,
+        negativas: 1
+      },
+      ordenes: {},
+    };
+
+    this.dbRefRestaurantes.push(newRest);
+
     this.setState({
-      phoneNumber: '',
-      password: '',
-      monto: 0.0
+      direccion: '',
+      urlImagen: '',
+      nombre: '',
     });
   }
 
@@ -52,25 +65,30 @@ class NuevoRestaurante extends Component {
       <Grid container className={classes.demo} justify="center" spacing={Number(spacing)}>
         <Grid item>
           <Paper className={classes.control}>
-            <h2>Checkout</h2>
+            <h2>Nuevo restaurante</h2>
             <form onSubmit={this.handleSubmit}>
-              <b>Monto total:</b> Lps. {this.state.monto}
               <br/>
-              <br/>
-              <b>Algo:</b>
+              <b>Nombre:</b>
               <br/>
               <TextField
-                value={this.state.phoneNumber}
-                onChange={(event) => this.setState({ phoneNumber: event.target.value })}
+                value={this.state.nombre}
+                onChange={(event) => this.setState({ nombre: event.target.value })}
+              />
+              <br />
+              <br/>
+              <b>Direccion:</b>
+              <br/>
+              <TextField
+                value={this.state.direccion}
+                onChange={(event) => this.setState({ direccion: event.target.value })}
               />
               <br />
               <br />
-              <b>Otro:</b>
+              <b>URL de Imagen:</b>
               <br/>
               <TextField
-                type="password"
-                value={this.state.password}
-                onChange={(event) => this.setState({ password: event.target.value })}
+                value={this.state.urlImagen}
+                onChange={(event) => this.setState({ urlImagen: event.target.value })}
               />
               <br />
               {this.state.registerError && (
@@ -118,6 +136,12 @@ class NuevoRestaurante extends Component {
     if (user) {
       this.setUser(user);
     }
+
+    // restaurantes
+    this.dbRefRestaurantes = firebase.database().ref('/restaurantes');
+  }
+
+  componentWillUnmount() {
   }
 }
 

@@ -9,10 +9,8 @@ import Typography from '@material-ui/core/Typography';
 import { CardHeader, Avatar, IconButton } from '@material-ui/core';
 import CardMedia from '@material-ui/core/CardMedia';
 import StarIcon from '@material-ui/icons/Star';
-import TextField from '@material-ui/core/TextField';
-import firebase from '../config/constants';
+import firebase from './../config/constants';
 import './idk.css';
-import Menu from 'Menu'
 
 const styles = {
   card: {
@@ -29,15 +27,15 @@ class Restaurante extends Component {
     super(props);
     this.getActionIcons = this.getActionIcons.bind(this);
     this.getActionButtons = this.getActionButtons.bind(this);
+    this.getRating = this.getRating.bind(this);
     this.classes = props.classes;
+
     this.state = {
-      codigo: '',
-      nombre: '',
-      direccion: '',
-      ratingPos: '',
-      ratingNeg: '',
-      urlImagen: '',
-      Menu: this.props.Menu
+      codigo: props.codigo,
+      nombre: props.nombre,
+      direccion: props.direccion,
+      rating: props.rating,
+      urlImagen: props.urlImagen
     };
   }
 
@@ -56,40 +54,54 @@ class Restaurante extends Component {
     return (
       <CardActions>
         <Button size="small" color="primary" onClick={this.handleAlgo}>
-          Accion
+          Orden #1
+        </Button>
+        <Button size="small" color="primary" onClick={this.handleAlgo}>
+          Orden #2
         </Button>
       </CardActions>
     );
   }
 
+  getRating() {
+    const pos = this.state.rating.positivas;
+    const neg = this.state.rating.negativas;
+
+    return (
+      <Typography component="p">
+        {`Rating positivos: ${pos}`}
+        <br/>
+        {`Rating negativos: ${neg}`}
+      </Typography>
+    );
+  }
+
   render() {
     return (
-      <div className='row' dateTime={'this.state.datetime.toString()'}>
+      <div className='row'>
         <Card className={this.classes.card}>
           <CardHeader
-            avatar={
-              <Avatar
-                alt="Remy Sharp"
-                src={this.state.authorPic}
-                className={this.classes.avatar}
-              />
-            }
+            // avatar={
+            //   <Avatar
+            //     alt="Remy Sharp"
+            //     // src={this.state.authorPic}
+            //     className={this.classes.avatar}
+            //   />
+            // }
             action={this.getActionIcons()}
-            title={'Direccion'}
-            subheader={'Codigo #1234'}
+            title={this.state.direccion}
+            subheader={'Codigo ' + this.state.codigo}
           />
         <CardMedia
           className={this.classes.media}
-          image="https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png"
-          title="Foto del restaurante"
+          image={this.state.urlImagen}
+          title={this.state.nombre}
         />
         <CardContent>
           <Typography gutterBottom variant="headline" component="h2">
-            {'Nombre del restaurante'}
+            {this.state.nombre}
           </Typography>
-          <Typography component="p">
-            {'Rating'}
-          </Typography>
+          {this.getRating()}
           <br/>
         </CardContent>
         {this.getActionButtons()}
@@ -98,10 +110,43 @@ class Restaurante extends Component {
     );
   }
 
+  setUser(user) {
+    // if user not in db: add him
+    firebase.database().ref('/users/' + user.uid).on('value', (snap) => {
+      if (!snap.val()) {
+        firebase.database().ref('/users/' + user.uid).set({
+          email: user.email,
+          profile_picture: user.photoURL,
+          username: user.displayName
+        });
+      }
+    });
+
+    // add user info to state
+    this.setState({ currentUser: {
+      uid: user.uid,
+      email: user.email,
+      profile_picture: user.photoURL,
+      username: user.displayName
+    } });
+  }
+
   componentDidMount() {
+    var user = firebase.auth().currentUser;
+    if (user) {
+      this.setUser(user);
+    }
+
+    // restaurantes
+    // this.dbRefRestaurantes = firebase.database().ref('/restaurantes');
+    // this.dbCallbackRestaurantes = this.dbRefRestaurantes.on('value', (snap) => {
+    //   this.setState({ restaurantes: snap.val() });
+    // });
   }
 
   componentWillUnmount() {
+    // restaurantes
+    // this.dbRefRestaurantes.off('value', this.dbCallbackRestaurantes);
   }
 }
 

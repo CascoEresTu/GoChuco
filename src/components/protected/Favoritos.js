@@ -38,9 +38,9 @@ class Favoritos extends Component {
           <Paper className={classes.control}>
             <h2>Favoritos</h2>
             <div className='rows'>
+              {/* <Restaurante/>
               <Restaurante/>
-              <Restaurante/>
-              <Restaurante/>
+              <Restaurante/> */}
             </div>
           </Paper>
         </Grid>
@@ -74,9 +74,17 @@ class Favoritos extends Component {
     if (user) {
       this.setUser(user);
     }
+
+    // restaurantes
+    this.dbRefRestaurantes = firebase.database().ref('/restaurantes');
+    this.dbCallbackRestaurantes = this.dbRefRestaurantes.on('value', (snap) => {
+      this.setState({ restaurantes: snap.val() });
+    });
   }
 
   componentWillUnmount() {
+    // restaurantes
+    this.dbRefRestaurantes.off('value', this.dbCallbackRestaurantes);
   }
 }
 
