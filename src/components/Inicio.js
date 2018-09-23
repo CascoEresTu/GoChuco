@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
+import firebase from '../config/constants';
 import Typography from '@material-ui/core/Typography';
 
 const styles = theme => ({
@@ -42,7 +43,32 @@ class Inicio extends Component {
     );
   }
 
+  setUser(user) {
+    // if user not in db: add him
+    firebase.database().ref('/users/' + user.uid).on('value', (snap) => {
+      if (!snap.val()) {
+        firebase.database().ref('/users/' + user.uid).set({
+          email: user.email,
+          profile_picture: user.photoURL,
+          username: user.displayName
+        });
+      }
+    });
+
+    // add user info to state
+    this.setState({ currentUser: {
+      uid: user.uid,
+      email: user.email,
+      profile_picture: user.photoURL,
+      username: user.displayName
+    } });
+  }
+
   componentDidMount() {
+    var user = firebase.auth().currentUser;
+    if (user) {
+      this.setUser(user);
+    }
   }
 
   componentWillUnmount() {

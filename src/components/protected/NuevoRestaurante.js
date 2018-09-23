@@ -21,7 +21,7 @@ const styles = theme => ({
   },
 });
 
-class Checkout extends Component {
+class NuevoRestaurante extends Component {
   constructor(props) {
     super(props);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -119,11 +119,10 @@ class Checkout extends Component {
       this.setUser(user);
     }
   }
-
 }
 
-Checkout.propTypes = {
+NuevoRestaurante.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(Checkout);
+export default withStyles(styles)(NuevoRestaurante);

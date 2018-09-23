@@ -4,6 +4,7 @@ import { withStyles } from '@material-ui/core/styles';
 import { Route, Link, Redirect, Switch } from 'react-router-dom';
 import Login from './Login';
 import Inicio from './Inicio';
+import NuevoRestaurante from './protected/NuevoRestaurante';
 import Catalogo from './protected/Catalogo';
 import Favoritos from './protected/Favoritos';
 import Carretita from './protected/Carretita';
@@ -119,6 +120,9 @@ class App extends Component {
         <Link to="/" color="inherit">
           <Button style={{ color: '#fff' }}>Inicio</Button>
         </Link>
+        <Link to="/nuevorestaurante">
+          <Button style={{ color: '#fff' }} >Nuevo restaurante</Button>
+        </Link>
         <Link to="/catalogo">
           <Button style={{ color: '#fff' }}>Catalogo</Button>
         </Link>
@@ -160,6 +164,11 @@ class App extends Component {
                     authed={this.state.authed}
                     path="/login"
                     component={Login}
+                  />
+                  <PrivateRoute
+                    authed={this.state.authed}
+                    path="/nuevorestaurante"
+                    component={NuevoRestaurante}
                   />
                   <PrivateRoute
                     authed={this.state.authed}
