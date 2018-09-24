@@ -5,8 +5,10 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import { CardHeader, IconButton } from '@material-ui/core';
+import Button from '@material-ui/core/Button';
 import DeleteIcon from '@material-ui/icons/Delete';
 import CardMedia from '@material-ui/core/CardMedia';
+import CardActions from '@material-ui/core/CardActions';
 import firebase from '../config/constants';
 import './idk.css';
 
@@ -25,6 +27,8 @@ class OrdenHistorial extends Component {
     super(props);
     this.getActionIcons = this.getActionIcons.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
+    this.recomendar = this.recomendar.bind(this);
+    this.noRecomendar = this.noRecomendar.bind(this);
     this.classes = props.classes;
 
     this.state = {
@@ -36,7 +40,9 @@ class OrdenHistorial extends Component {
       restaurante: props.restaurante,
       nombreRestaurante: props.nombreRestaurante,
       urlImagen: props.urlImagen,
-      precio: props.precio
+      precio: props.precio,
+      uid: props.uid,
+      ratings: {}
     };
   }
 
@@ -52,6 +58,32 @@ class OrdenHistorial extends Component {
     );
   }
 
+  recomendar() {
+    // initial value
+    var newRatings = this.state.ratings;
+
+    //flip on the user
+    newRatings.positivas[this.state.uid] = true;
+    newRatings.negativas[this.state.uid] = false;
+
+    // update db and state
+    this.dbRefRatings.update(newRatings);
+    this.setState({ ratings: newRatings });
+  }
+
+  noRecomendar() {
+    // initial value
+    var newRatings = this.state.ratings;
+
+    //flip on the user
+    newRatings.positivas[this.state.uid] = false;
+    newRatings.negativas[this.state.uid] = true;
+
+    // update db and state
+    this.dbRefRatings.update(newRatings);
+    this.setState({ ratings: newRatings });
+  }
+
   render() {
     return (
       <div className='row'>
@@ -59,7 +91,7 @@ class OrdenHistorial extends Component {
           <CardHeader
             action={this.getActionIcons()}
             title={this.state.nombreRestaurante}
-            subheader={'Codigo de checkout' + this.state.idCheckout}
+            subheader={'Codigo de checkout ' + this.state.idCheckout}
           />
           <CardMedia
             className={this.classes.media}
@@ -79,6 +111,14 @@ class OrdenHistorial extends Component {
             </Typography>
             <br/>
           </CardContent>
+          <CardActions>
+            <Button size="small" color="primary" onClick={this.recomendar}>
+              Recomendar
+            </Button>
+            <Button size="small" color="primary" onClick={this.noRecomendar}>
+              No recomendar
+            </Button>
+          </CardActions>
         </Card>
       </div>
     );
@@ -87,9 +127,17 @@ class OrdenHistorial extends Component {
   componentDidMount() {
     // historial
     this.dbRefHistorial = firebase.database().ref('/historial/' + this.state.codigoHistorial);
+
+    // ratings
+    this.dbRefRatings = firebase.database().ref(`/restaurantes/${this.state.restaurante}/rating/`);
+    this.dbCallbackRatings = this.dbRefRatings.on('value', (snap) => {
+      this.setState({ ratings: snap.val() });
+    });
   }
 
   componentWillUnmount() {
+    // ratings
+    this.dbRefRatings.off('value', this.dbCallbackRatings);
   }
 }
 

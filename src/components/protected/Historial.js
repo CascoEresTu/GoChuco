@@ -47,6 +47,7 @@ class Historial extends Component {
             precio={this.state.historial[key].precio}
             restaurante={this.state.historial[key].restaurante}
             urlImagen={this.state.historial[key].urlImagen}
+            uid={this.state.currentUser.uid}
           />
         );
       }
