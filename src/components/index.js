@@ -5,6 +5,7 @@ import { Route, Link, Redirect, Switch } from 'react-router-dom';
 import Login from './Login';
 import Inicio from './Inicio';
 import NuevoRestaurante from './protected/NuevoRestaurante';
+import NuevaOrden from './protected/NuevaOrden';
 import Catalogo from './protected/Catalogo';
 import Favoritos from './protected/Favoritos';
 import Carretita from './protected/Carretita';
@@ -123,6 +124,9 @@ class App extends Component {
         <Link to="/nuevorestaurante">
           <Button style={{ color: '#fff' }} >Nuevo restaurante</Button>
         </Link>
+        <Link to="/nuevaorden">
+          <Button style={{ color: '#fff' }} >Nueva orden</Button>
+        </Link>
         <Link to="/catalogo">
           <Button style={{ color: '#fff' }}>Catalogo</Button>
         </Link>
@@ -169,6 +173,11 @@ class App extends Component {
                     authed={this.state.authed}
                     path="/nuevorestaurante"
                     component={NuevoRestaurante}
+                  />
+                  <PrivateRoute
+                    authed={this.state.authed}
+                    path="/nuevaorden"
+                    component={NuevaOrden}
                   />
                   <PrivateRoute
                     authed={this.state.authed}

@@ -1,26 +1,46 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { withStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
-import { CardHeader, Avatar, IconButton } from '@material-ui/core';
+import { CardHeader, IconButton } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
-import TextField from '@material-ui/core/TextField';
+import CardMedia from '@material-ui/core/CardMedia';
 import firebase from '../config/constants';
 import './idk.css';
 
-class Orden extends Component {
-  classes = {};
+const styles = {
+  card: {
+    maxWidth: 345,
+  },
+  media: {
+    height: 0,
+    paddingTop: '56.25%', // 16:9
+  },
+};
 
+class Orden extends Component {
   constructor(props) {
     super(props);
     this.getActionIcons = this.getActionIcons.bind(this);
+    this.handleDelete = this.handleDelete.bind(this);
+    this.classes = props.classes;
+
     this.state = {
-      codigo: '',
-      nombre: '',
-      descripcion: '',
-      nombreRestaurante: '',
-      urlImagen: ''
+      codigoRequest: props.codigoRequest,
+      codigoOrden: props.codigoOrden,
+      nombre: props.nombre,
+      descripcion: props.descripcion,
+      restaurante: props.restaurante,
+      nombreRestaurante: props.nombreRestaurante,
+      urlImagen: props.urlImagen,
+      precio: props.precio
     };
+  }
+
+  handleDelete() {
+    this.dbRefOrdenesRequests.remove();
   }
 
   getActionIcons() {
@@ -33,39 +53,47 @@ class Orden extends Component {
 
   render() {
     return (
-      <div className='row' dateTime={'this.state.datetime.toString()'}>
+      <div className='row'>
         <Card className={this.classes.card}>
           <CardHeader
-            avatar={
-              <Avatar
-                alt="Remy Sharp"
-                src={this.state.authorPic}
-                className={this.classes.avatar}
-              />
-            }
             action={this.getActionIcons()}
-            title={'Nombre del restaurante'}
-            subheader={'Codigo de orden #1234'}
+            title={this.state.nombreRestaurante}
+            subheader={'Codigo ' + this.state.codigoRequest}
           />
-        <CardContent>
-          <Typography gutterBottom variant="headline" component="h2">
-            {'Nombre de la orden'}
-          </Typography>
-          <Typography component="p">
-            {'Descripcion de la orden'}
-          </Typography>
-          <br/>
-        </CardContent>
-      </Card>
+          <CardMedia
+            className={this.classes.media}
+            image={this.state.urlImagen}
+            title={this.state.nombre}
+          />
+          <CardContent>
+            <Typography gutterBottom variant="headline" component="h2">
+              {this.state.nombre}
+            </Typography>
+            <Typography component="p">
+              {this.state.descripcion}
+              <br/>
+              <br/>
+              <br/>
+              {`Precio: Lps. ${this.state.precio}`}
+            </Typography>
+            <br/>
+          </CardContent>
+        </Card>
       </div>
     );
   }
 
   componentDidMount() {
+    // ordenes-requests
+    this.dbRefOrdenesRequests = firebase.database().ref('/ordenes-requests/' + this.state.codigoRequest);
   }
 
   componentWillUnmount() {
   }
 }
 
-export default Orden;
+Orden.propTypes = {
+  classes: PropTypes.object.isRequired,
+};
+
+export default withStyles(styles)(Orden);

@@ -65,7 +65,7 @@ class Catalogo extends Component {
       <Grid container className={classes.demo} justify="center" spacing={Number(spacing)}>
         <Grid item>
           <Paper className={classes.control}>
-            <h2>Catalogo</h2>
+            <h2>Favoritos</h2>
             <div className='rows'>
               {this.getRestaurantes()}
             </div>
@@ -108,19 +108,19 @@ class Catalogo extends Component {
       this.setState({ restaurantes: snap.val() });
     });
 
-        // favorites
-        this.dbRefFavoritos = firebase.database().ref('/favoritos/');
-        this.dbCallbackFavoritos = this.dbRefFavoritos.on('value', (snap) => {
-          this.setState({ favoritos: snap.val() });
-        });
+    // favorites
+    this.dbRefFavoritos = firebase.database().ref('/favoritos/');
+    this.dbCallbackFavoritos = this.dbRefFavoritos.on('value', (snap) => {
+      this.setState({ favoritos: snap.val() });
+    });
   }
 
   componentWillUnmount() {
     // restaurantes
     this.dbRefRestaurantes.off('value', this.dbCallbackRestaurantes);
 
-        // favoritos
-        this.dbRefFavoritos.off('value', this.dbCallbackFavoritos);
+    // favoritos
+    this.dbRefFavoritos.off('value', this.dbCallbackFavoritos);
   }
 }
 

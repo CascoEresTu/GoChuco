@@ -26,9 +26,36 @@ class Carretita extends Component {
   constructor(props) {
     super(props);
     this.handleCheckout = this.handleCheckout.bind(this);
+    this.getOrdenes = this.getOrdenes.bind(this);
+
     this.state = {
-      spacing: '16'
+      spacing: '16',
+      requests: {},
     };
+  }
+
+  getOrdenes() {
+    var ordenes = [];
+
+    for (let key in this.state.requests) {
+      if (this.state.currentUser.uid === this.state.requests[key].uid) {
+        ordenes.push(
+          <Orden
+            key={key}
+            codigoRequest={key}
+            codigoOrden={this.state.requests[key].codigoOrden}
+            nombre={this.state.requests[key].nombre}
+            descripcion={this.state.requests[key].descripcion}
+            restaurante={this.state.requests[key].restaurante}
+            nombreRestaurante={this.state.requests[key].nombreRestaurante}
+            urlImagen={this.state.requests[key].urlImagen}
+            precio={this.state.requests[key].precio}
+          />
+        );
+      }
+    }
+
+    return ordenes;
   }
 
   handleCheckout() {
@@ -44,9 +71,7 @@ class Carretita extends Component {
           <Paper className={classes.control}>
             <h2>Carretita</h2>
             <div className='rows'>
-              <Orden/>
-              <Orden/>
-              <Orden/>
+              {this.getOrdenes()}
             </div>
             <Link to="/checkout">
               <Button size="small" color="primary" onClick={this.handleCheckout}>
@@ -85,9 +110,16 @@ class Carretita extends Component {
     if (user) {
       this.setUser(user);
     }
+    // ordenes-requests
+    this.dbRefOrdenesRequests = firebase.database().ref('/ordenes-requests');
+    this.dbCallbackOrdenesRequests = this.dbRefOrdenesRequests.on('value', (snap) => {
+      this.setState({ requests: snap.val() });
+    });
   }
 
   componentWillUnmount() {
+    // ordenes-requests
+    this.dbRefOrdenesRequests.off('value', this.dbCallbackOrdenesRequests);
   }
 }
 

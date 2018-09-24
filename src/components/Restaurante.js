@@ -4,11 +4,11 @@ import { withStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
-import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import { CardHeader, IconButton } from '@material-ui/core';
 import CardMedia from '@material-ui/core/CardMedia';
 import StarIcon from '@material-ui/icons/Star';
+import OrdenButton from './OrdenButton';
 import firebase from './../config/constants';
 import './idk.css';
 
@@ -37,7 +37,9 @@ class Restaurante extends Component {
       direccion: props.direccion,
       rating: props.rating,
       urlImagen: props.urlImagen,
-      favoritos: {} // people that have this on favorite
+      favoritos: {},
+      restaurantes: {},
+      ordenes: {}
     };
   }
 
@@ -73,14 +75,25 @@ class Restaurante extends Component {
   }
 
   getActionButtons() {
+    var ordenes = [];
+
+    for (let key in this.state.ordenes) {
+      if (this.state.ordenes[key].restaurante === this.state.codigo) {
+        ordenes.push(
+          <OrdenButton
+            key={key}
+            codigo={key}
+            orden={this.state.ordenes[key]}
+            nombreRestaurante={this.state.nombre}
+            currentUser={this.state.currentUser}
+          />
+        );
+      }
+    }
+
     return (
       <CardActions>
-        <Button size="small" color="primary" onClick={this.handleAlgo}>
-          Orden #1
-        </Button>
-        <Button size="small" color="primary" onClick={this.handleAlgo}>
-          Orden #2
-        </Button>
+        {ordenes}
       </CardActions>
     );
   }
@@ -89,13 +102,25 @@ class Restaurante extends Component {
     const pos = this.state.rating.positivas;
     const neg = this.state.rating.negativas;
 
-    return (
-      <Typography component="p">
-        {`Rating positivos: ${pos}`}
-        <br/>
-        {`Rating negativos: ${neg}`}
-      </Typography>
-    );
+    if (neg === 0 && pos === 0) {
+      return (
+        <Typography component="p">
+          {`No hay ratings aun, se el primero en calificarnos!`}
+        </Typography>
+      );
+    } else if (neg === 0) {
+      return (
+        <Typography component="p">
+          {`Ratings: 100% positivos de ${pos} calificaciones!`}
+        </Typography>
+      );
+    } else {
+      return (
+        <Typography component="p">
+          {`Ratings: ${ 100*pos / (pos + neg) }% positivos de ${pos + neg} calificaciones!`}
+        </Typography>
+      );
+    }
   }
 
   render() {
@@ -107,20 +132,20 @@ class Restaurante extends Component {
             title={this.state.direccion}
             subheader={'Codigo ' + this.state.codigo}
           />
-        <CardMedia
-          className={this.classes.media}
-          image={this.state.urlImagen}
-          title={this.state.nombre}
-        />
-        <CardContent>
-          <Typography gutterBottom variant="headline" component="h2">
-            {this.state.nombre}
-          </Typography>
-          {this.getRating()}
-          <br/>
-        </CardContent>
-        {this.getActionButtons()}
-      </Card>
+          <CardMedia
+            className={this.classes.media}
+            image={this.state.urlImagen}
+            title={this.state.nombre}
+          />
+          <CardContent>
+            <Typography gutterBottom variant="headline" component="h2">
+              {this.state.nombre}
+            </Typography>
+            {this.getRating()}
+            <br/>
+          </CardContent>
+          {this.getActionButtons()}
+        </Card>
       </div>
     );
   }
@@ -158,7 +183,13 @@ class Restaurante extends Component {
       this.setState({ restaurantes: snap.val() });
     });
 
-    // favorites
+    // ordenes
+    this.dbRefOrdenes = firebase.database().ref('/ordenes/');
+    this.dbCallbackOrdenes = this.dbRefOrdenes.on('value', (snap) => {
+      this.setState({ ordenes: snap.val() });
+    });
+
+    // favoritos
     this.dbRefFavoritos = firebase.database().ref('/favoritos/' + this.state.codigo);
     this.dbCallbackFavoritos = this.dbRefFavoritos.on('value', (snap) => {
       this.setState({ favoritos: snap.val() });
@@ -168,6 +199,9 @@ class Restaurante extends Component {
   componentWillUnmount() {
     // restaurantes
     this.dbRefRestaurantes.off('value', this.dbCallbackRestaurantes);
+
+    // ordenes
+    this.dbRefOrdenes.off('value', this.dbCallbackOrdenes);
 
     // favoritos
     this.dbRefFavoritos.off('value', this.dbCallbackFavoritos);

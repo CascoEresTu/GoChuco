@@ -5,10 +5,9 @@ import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
-import firebase from '../../config/constants';
 import Select from '@material-ui/core/Select';
-import Dropdown from '@material-ui/core/Dropdown';
-import DropdownItem from '@material-ui/core/DropdownItem';
+import MenuItem from '@material-ui/core/MenuItem';
+import firebase from '../../config/constants';
 import '../idk.css';
 
 const styles = theme => ({
@@ -32,106 +31,107 @@ class NuevaOrden extends Component {
     this.state = {
       spacing: '16',
       registerError: null,
-      phoneNumber: '',
-      password: '',
-      Restaurants: {},
-      MenuItems:{}, 
-      monto: 0.0
+      restaurantes: {},
+      restaurante: '',
+      descripcion: '',
+      urlImagen: '',
+      nombre: '',
+      precio: 0,
     };
+  }
+
+  generarSelect() {
+    var items = [];
+
+    for (let key in this.state.restaurantes) {
+      if (this.state.currentUser.uid === this.state.restaurantes[key].owner) {
+        items.push(
+          <MenuItem value={key}>
+            {this.state.restaurantes[key].nombre}
+          </MenuItem>
+        );
+      }
+    }
+    return (
+      <Select
+        value={this.state.restaurante}
+        onChange={(event) => this.setState({ restaurante: event.target.value })}
+        name='restaurante'
+        inputProps={{
+          id: 'restaurante-required',
+        }}
+      >
+        <MenuItem value=''><em></em></MenuItem>
+        {items}
+      </Select>
+    );
   }
 
   handleSubmit(event) {
     event.preventDefault();
+    const newOrder = {
+      descripcion: this.state.descripcion,
+      restaurante: this.state.restaurante,
+      urlImagen: this.state.urlImagen,
+      nombre: this.state.nombre,
+      precio: this.state.precio,
+    };
+
+    this.dbRefOrdenes.push(newOrder);
+
     this.setState({
-      phoneNumber: '',
-      password: '',
-      monto: 0.0
+      restaurante: '',
+      descripcion: '',
+      urlImagen: '',
+      nombre: '',
+      precio: 0,
     });
-  }
-
-  renderComboBoxRestaurants(){
-
-      var selectedRestaurant = this.state.D
-      return (
-        
-        <Dropdown color="primary" label="Dropdown">
-          <DropdownItem link="#/link1">Option 1</DropdownItem>
-          <DropdownItem>Option 2</DropdownItem>
-          <DropdownItem>Option 3</DropdownItem>
-          <DropdownItem>Option 4</DropdownItem>
-        </Dropdown>
-      );
-
-    
-  }
-
-  renderComboBoxMenuItems(){
-    
-      return (
-        <Dropdown color="primary" label="Dropdown">
-          <DropdownItem link="#/link1">Option 1</DropdownItem>
-          <DropdownItem>Option 2</DropdownItem>
-          <DropdownItem>Option 3</DropdownItem>
-          <DropdownItem>Option 4</DropdownItem>
-        </Dropdown>
-      );
-
   }
 
   render() {
     const { classes } = this.props;
     const { spacing } = this.state;
-    var slctdRestaurant;
-    var getRestaurants = []
-    
-    if (this.state.Restaurants) {
-      for(let key in this.state.Restaurants)
-      let Restaurant = this.state.Restaurants[key]
-      var RestName = Restaurant.nombre;  
-      getRestaurants.push(
-
-        <DropdownItem> RestName </DropdownItem>
-      )
-    }
-
-    var slctdItem; 
 
     return (
       <Grid container className={classes.demo} justify="center" spacing={Number(spacing)}>
         <Grid item>
           <Paper className={classes.control}>
-
-            <Dropdown color="primary" label="Dropdown">
-              {getRestaurants} 
-            </Dropdown>        
-            
-            <h2>Orden</h2>
+            <h2>Nueva orden</h2>
             <form onSubmit={this.handleSubmit}>
-              <Select></Select>
-              
-              <TextField
-                value={this.state.phoneNumber}
-                onChange={(event) => this.setState({ phoneNumber: event.target.value })}
-              />
-              
-              <TextField
-                value={this.state.phoneNumber}
-                onChange={(event) => this.setState({ phoneNumber: event.target.value })}
-              />
-
-               <TextField
-                value={this.state.phoneNumber}
-                onChange={(event) => this.setState({ phoneNumber: event.target.value })}
-              />
-              
-              <br />
-              <br />
-              <b>Otro:</b>
+              <br/>
+              <b>Nombre:</b>
               <br/>
               <TextField
-                type="password"
-                value={this.state.password}
-                onChange={(event) => this.setState({ password: event.target.value })}
+                value={this.state.nombre}
+                onChange={(event) => this.setState({ nombre: event.target.value })}
+              />
+              <br/>
+              <br/>
+              <b>Descripcion:</b>
+              <br/>
+              <TextField
+                value={this.state.descripcion}
+                onChange={(event) => this.setState({ descripcion: event.target.value })}
+              />
+              <br/>
+              <br/>
+              <b>Precio (Lps.):</b>
+              <br/>
+              <TextField
+                type='number'
+                value={this.state.precio}
+                onChange={(event) => this.setState({ precio: event.target.value })}
+              />
+              <br/>
+              <br/>
+              {this.generarSelect()}
+              <br/>
+              <br/>
+              <b>URL de Imagen:</b>
+              <br/>
+              <TextField
+                value={this.state.urlImagen}
+                onChange={(event) => this.setState({ urlImagen: event.target.value })}
               />
               <br />
               {this.state.registerError && (
@@ -175,35 +175,24 @@ class NuevaOrden extends Component {
   }
 
   componentDidMount() {
-  // Restaurants
-    this.dbRefRestaurants = firebase.database().ref('/Restaurants');
-    this.dbCallbackRestaurants = this.dbRefRestaurants.on('value', (snap) => {
-    this.setState({ Restaurants: snap.val() });
-    });
-    //Menu
-    this.dbRefMenu = firebase.database().ref('/Menu');
-    this.dbCallbackMenu = this.dbRefMenu.on('value', (snap) => {
-      this.setState({ Menu: snap.val() });
-    });
-
-    // MenuItems
-    this.dbRefMenuItems = firebase.database().ref('/MenuItems');
-    this.dbCallbackMenuItems = this.dbRefMenuItems.on('value', (snap) => {
-      this.setState({ MenuItems: snap.val() });
-    });
-
-
-// users
-    this.dbRefUsers = firebase.database().ref('/users');
-    this.dbCallbackUsers = this.dbRefUsers.on('value', (snap) => {
-    this.setState({ users: snap.val() });
-    });
-
-
     var user = firebase.auth().currentUser;
     if (user) {
       this.setUser(user);
     }
+
+    // restaurantes
+    this.dbRefRestaurantes = firebase.database().ref('/restaurantes');
+    this.dbCallbackRestaurantes = this.dbRefRestaurantes.on('value', (snap) => {
+      this.setState({ restaurantes: snap.val() });
+    });
+
+    // ordenes
+    this.dbRefOrdenes = firebase.database().ref('/ordenes');
+  }
+
+  componentWillUnmount() {
+    // restaurantes
+    this.dbRefRestaurantes.off('value', this.dbCallbackRestaurantes);
   }
 }
 

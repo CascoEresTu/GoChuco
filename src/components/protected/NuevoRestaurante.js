@@ -41,6 +41,7 @@ class NuevoRestaurante extends Component {
       direccion: this.state.direccion,
       urlImagen: this.state.urlImagen,
       nombre: this.state.nombre,
+      owner: this.state.currentUser.uid,
       rating: {
         positivas: 0,
         negativas: 0
