@@ -56,7 +56,7 @@ class Checkout extends Component {
   }
 
   guardarHistorial(key) {
-    // mover todos posts de /ordenes-requests/ a /historial/
+    // mover todos posts del usuario de /ordenes-requests/ a /historial/
     let ordenHistorial;
 
     for (let i in this.state.myRequests) {
@@ -162,9 +162,6 @@ class Checkout extends Component {
     if (user) {
       this.setUser(user);
     }
-
-    // historial
-    this.dbRefHistorial = firebase.database().ref('/historial/');
 
     // pagos
     this.dbRefPagos = firebase.database().ref('/pagos/');

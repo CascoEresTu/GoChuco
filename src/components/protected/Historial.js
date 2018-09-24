@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
-import Orden from '../Orden';
+import OrdenHistorial from '../OrdenHistorial';
 import firebase from '../../config/constants';
 import '../idk.css';
 
@@ -23,13 +23,36 @@ const styles = theme => ({
 class Historial extends Component {
   constructor(props) {
     super(props);
-    this.handleCheckout = this.handleCheckout.bind(this);
+    this.getHistorial = this.getHistorial.bind(this);
     this.state = {
-      spacing: '16'
+      spacing: '16',
+      historial: {},
     };
   }
 
-  handleCheckout() {
+  getHistorial() {
+    var historial = [];
+
+    for (let key in this.state.historial) {
+      if (this.state.currentUser.uid === this.state.historial[key].uid) {
+        historial.push(
+          <OrdenHistorial
+            key={key}
+            codigoHistorial={key}
+            codigoOrden={this.state.historial[key].codigoOrden}
+            descripcion={this.state.historial[key].descripcion}
+            idCheckout={this.state.historial[key].idCheckout}
+            nombre={this.state.historial[key].nombre}
+            nombreRestaurante={this.state.historial[key].nombreRestaurante}
+            precio={this.state.historial[key].precio}
+            restaurante={this.state.historial[key].restaurante}
+            urlImagen={this.state.historial[key].urlImagen}
+          />
+        );
+      }
+    }
+
+    return historial;
   }
 
   render() {
@@ -42,9 +65,7 @@ class Historial extends Component {
           <Paper className={classes.control}>
             <h2>Historial</h2>
             <div className='rows'>
-              <Orden/>
-              <Orden/>
-              <Orden/>
+              {this.getHistorial()}
             </div>
           </Paper>
         </Grid>
@@ -78,9 +99,17 @@ class Historial extends Component {
     if (user) {
       this.setUser(user);
     }
+
+    // historial
+    this.dbRefHistorial = firebase.database().ref('/historial/');
+    this.dbCallbackHistorial = this.dbRefHistorial.on('value', (snap) => {
+      this.setState({ historial: snap.val() });
+    });
   }
 
   componentWillUnmount() {
+    // historial
+    this.dbRefHistorial.off('value', this.dbCallbackHistorial);
   }
 }
 
