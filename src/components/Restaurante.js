@@ -6,7 +6,7 @@ import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
-import { CardHeader, Avatar, IconButton } from '@material-ui/core';
+import { CardHeader, IconButton } from '@material-ui/core';
 import CardMedia from '@material-ui/core/CardMedia';
 import StarIcon from '@material-ui/icons/Star';
 import firebase from './../config/constants';
@@ -28,6 +28,7 @@ class Restaurante extends Component {
     this.getActionIcons = this.getActionIcons.bind(this);
     this.getActionButtons = this.getActionButtons.bind(this);
     this.getRating = this.getRating.bind(this);
+    this.handleFavorite = this.handleFavorite.bind(this);
     this.classes = props.classes;
 
     this.state = {
@@ -35,16 +36,37 @@ class Restaurante extends Component {
       nombre: props.nombre,
       direccion: props.direccion,
       rating: props.rating,
-      urlImagen: props.urlImagen
+      urlImagen: props.urlImagen,
+      favoritos: {} // people that have this on favorite
     };
   }
 
   getActionIcons() {
     return (
-      <IconButton key='delete' onClick={this.handleDelete}>
+      <IconButton key='star' onClick={this.handleFavorite}>
         <StarIcon />
       </IconButton>
     );
+  }
+
+  handleFavorite(event) {
+    var favority = {};
+
+    if (!this.state.favoritos) {
+      // there are no favorites yet so we create a new node
+      favority[this.state.currentUser.uid] = true;
+    } else if (!(this.state.currentUser.uid in this.state.favoritos)) {
+      // there are favorites but the user isnt' following
+      favority = this.state.favoritos;
+      favority[this.state.currentUser.uid] = true;
+    } else {
+      // there are favorites and the user has followed, invert result
+      favority = this.state.favoritos;
+      favority[this.state.currentUser.uid] = !this.state.favoritos[this.state.currentUser.uid];
+    }
+    // update db and state
+    this.dbRefFavoritos.update(favority);
+    this.setState({ favoritos: favority });
   }
 
   handleAlgo(){
@@ -81,13 +103,6 @@ class Restaurante extends Component {
       <div className='row'>
         <Card className={this.classes.card}>
           <CardHeader
-            // avatar={
-            //   <Avatar
-            //     alt="Remy Sharp"
-            //     // src={this.state.authorPic}
-            //     className={this.classes.avatar}
-            //   />
-            // }
             action={this.getActionIcons()}
             title={this.state.direccion}
             subheader={'Codigo ' + this.state.codigo}
@@ -138,15 +153,24 @@ class Restaurante extends Component {
     }
 
     // restaurantes
-    // this.dbRefRestaurantes = firebase.database().ref('/restaurantes');
-    // this.dbCallbackRestaurantes = this.dbRefRestaurantes.on('value', (snap) => {
-    //   this.setState({ restaurantes: snap.val() });
-    // });
+    this.dbRefRestaurantes = firebase.database().ref('/restaurantes/');
+    this.dbCallbackRestaurantes = this.dbRefRestaurantes.on('value', (snap) => {
+      this.setState({ restaurantes: snap.val() });
+    });
+
+    // favorites
+    this.dbRefFavoritos = firebase.database().ref('/favoritos/' + this.state.codigo);
+    this.dbCallbackFavoritos = this.dbRefFavoritos.on('value', (snap) => {
+      this.setState({ favoritos: snap.val() });
+    });
   }
 
   componentWillUnmount() {
     // restaurantes
-    // this.dbRefRestaurantes.off('value', this.dbCallbackRestaurantes);
+    this.dbRefRestaurantes.off('value', this.dbCallbackRestaurantes);
+
+    // favoritos
+    this.dbRefFavoritos.off('value', this.dbCallbackFavoritos);
   }
 }
 

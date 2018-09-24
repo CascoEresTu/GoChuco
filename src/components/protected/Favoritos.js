@@ -5,7 +5,6 @@ import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Restaurante from '../Restaurante';
 import firebase from '../../config/constants';
-import Typography from '@material-ui/core/Typography';
 
 const styles = theme => ({
   root: {
@@ -20,12 +19,42 @@ const styles = theme => ({
   },
 });
 
-class Favoritos extends Component {
+class Catalogo extends Component {
   constructor(props) {
     super(props);
+    this.getRestaurantes = this.getRestaurantes.bind(this);
     this.state = {
-      spacing: '16'
+      spacing: '16',
+      restaurantes: {},
+      favoritos: {},
     };
+  }
+
+  getRestaurantes() {
+    var resultado = [];
+
+    for (let key in this.state.restaurantes) {
+      if (!(key in this.state.favoritos))
+        continue;
+
+      if (!(this.state.currentUser.uid in this.state.favoritos[key]))
+        continue;
+
+      if (this.state.favoritos[key][this.state.currentUser.uid] === true) {
+        resultado.push(
+          <Restaurante
+            key={key}
+            codigo={key}
+            nombre={this.state.restaurantes[key].nombre}
+            direccion={this.state.restaurantes[key].direccion}
+            rating={this.state.restaurantes[key].rating}
+            urlImagen={this.state.restaurantes[key].urlImagen}
+          />
+        );
+      }
+    }
+
+    return resultado;
   }
 
   render() {
@@ -36,11 +65,9 @@ class Favoritos extends Component {
       <Grid container className={classes.demo} justify="center" spacing={Number(spacing)}>
         <Grid item>
           <Paper className={classes.control}>
-            <h2>Favoritos</h2>
+            <h2>Catalogo</h2>
             <div className='rows'>
-              {/* <Restaurante/>
-              <Restaurante/>
-              <Restaurante/> */}
+              {this.getRestaurantes()}
             </div>
           </Paper>
         </Grid>
@@ -80,16 +107,25 @@ class Favoritos extends Component {
     this.dbCallbackRestaurantes = this.dbRefRestaurantes.on('value', (snap) => {
       this.setState({ restaurantes: snap.val() });
     });
+
+        // favorites
+        this.dbRefFavoritos = firebase.database().ref('/favoritos/');
+        this.dbCallbackFavoritos = this.dbRefFavoritos.on('value', (snap) => {
+          this.setState({ favoritos: snap.val() });
+        });
   }
 
   componentWillUnmount() {
     // restaurantes
     this.dbRefRestaurantes.off('value', this.dbCallbackRestaurantes);
+
+        // favoritos
+        this.dbRefFavoritos.off('value', this.dbCallbackFavoritos);
   }
 }
 
-Favoritos.propTypes = {
+Catalogo.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(Favoritos);
+export default withStyles(styles)(Catalogo);

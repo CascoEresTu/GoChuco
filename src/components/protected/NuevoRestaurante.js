@@ -42,8 +42,8 @@ class NuevoRestaurante extends Component {
       urlImagen: this.state.urlImagen,
       nombre: this.state.nombre,
       rating: {
-        positivas: 1,
-        negativas: 1
+        positivas: 0,
+        negativas: 0
       },
       ordenes: {},
     };
