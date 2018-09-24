@@ -25,22 +25,66 @@ class Checkout extends Component {
   constructor(props) {
     super(props);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.updateRequests = this.updateRequests.bind(this);
 
     this.state = {
       spacing: '16',
       registerError: null,
       phoneNumber: '',
       password: '',
-      monto: 0.0
+      monto: 0.0,
+      requests: {},
+      myRequests: {},
     };
+  }
+
+  updateRequests() {
+    var result = {};
+    var montoTotal = 0;
+
+    for (let key in this.state.requests) {
+      if (this.state.currentUser.uid === this.state.requests[key].uid) {
+        result[key] = this.state.requests[key];
+        montoTotal += parseInt(result[key].precio, 10);
+      }
+    }
+
+    this.setState({
+      monto: montoTotal,
+      myRequests: result
+    });
+  }
+
+  guardarHistorial(key) {
+    // mover todos posts de /ordenes-requests/ a /historial/
+    let ordenHistorial;
+
+    for (let i in this.state.myRequests) {
+      ordenHistorial = this.state.myRequests[i];
+      ordenHistorial.idCheckout = key;
+      firebase.database().ref('/historial/' + i).set(ordenHistorial);
+      firebase.database().ref('/ordenes-requests/' + i).remove();
+    }
+
+    this.setState({
+      phoneNumber: '',
+      password: '',
+      monto: 0.0,
+      myRequests: {},
+    });
   }
 
   handleSubmit(event) {
     event.preventDefault();
-    this.setState({
-      phoneNumber: '',
-      password: '',
-      monto: 0.0
+    const checkout = {
+      telefono: this.state.phoneNumber,
+      clave: this.state.password,
+      monto: this.state.monto,
+      uid: this.state.currentUser.uid,
+    };
+
+    this.dbRefPagos.push(checkout).then((snap) => {
+      this.guardarHistorial(snap.key);
     });
   }
 
@@ -57,22 +101,22 @@ class Checkout extends Component {
               <b>Monto total:</b> Lps. {this.state.monto}
               <br/>
               <br/>
-              <b>Algo:</b>
+              <b>Num. telefono:</b>
               <br/>
               <TextField
                 value={this.state.phoneNumber}
                 onChange={(event) => this.setState({ phoneNumber: event.target.value })}
               />
-              <br />
-              <br />
-              <b>Otro:</b>
+              <br/>
+              <br/>
+              <b>Llave secreta:</b>
               <br/>
               <TextField
                 type="password"
                 value={this.state.password}
                 onChange={(event) => this.setState({ password: event.target.value })}
               />
-              <br />
+              <br/>
               {this.state.registerError && (
                 <div className="alert alert-danger" role="alert">
                   <span
@@ -118,6 +162,24 @@ class Checkout extends Component {
     if (user) {
       this.setUser(user);
     }
+
+    // historial
+    this.dbRefHistorial = firebase.database().ref('/historial/');
+
+    // pagos
+    this.dbRefPagos = firebase.database().ref('/pagos/');
+
+    // ordenes-requests
+    this.dbRefOrdenesRequests = firebase.database().ref('/ordenes-requests/');
+    this.dbCallbackOrdenesRequests = this.dbRefOrdenesRequests.on('value', (snap) => {
+      this.setState({ requests: snap.val() });
+      this.updateRequests();
+    });
+  }
+
+  componentWillUnmount() {
+    // ordenes-requests
+    this.dbRefOrdenesRequests.off('value', this.dbCallbackOrdenesRequests);
   }
 
 }

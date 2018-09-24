@@ -11,6 +11,7 @@ import Favoritos from './protected/Favoritos';
 import Carretita from './protected/Carretita';
 import Checkout from './protected/Checkout';
 import Historial from './protected/Historial';
+import Pagos from './protected/Pagos';
 import { logout } from '../helpers/auth';
 import { firebaseAuth } from '../config/constants';
 import AppBar from '@material-ui/core/AppBar';
@@ -139,6 +140,9 @@ class App extends Component {
         <Link to="/historial">
           <Button style={{ color: '#fff' }} >Historial</Button>
         </Link>
+        <Link to="/pagos">
+          <Button style={{ color: '#fff' }} >Pagos</Button>
+        </Link>
         {authButtons}
       </div>
     );
@@ -203,6 +207,11 @@ class App extends Component {
                     authed={this.state.authed}
                     path="/historial"
                     component={Historial}
+                  />
+                  <PrivateRoute
+                    authed={this.state.authed}
+                    path="/pagos"
+                    component={Pagos}
                   />
                   <Route render={() => <h3>Quejesto</h3>} />
                 </Switch>
