@@ -28,6 +28,7 @@ class Pago extends Component {
       monto: props.monto,
       telefono: props.telefono,
       uid: props.uid,
+      serverTime: props.serverTime,
       pagos: {},
     };
   }
@@ -46,8 +47,9 @@ class Pago extends Component {
             <Typography component="p">
               <br/>
               <br/>
-              <br/>
               {`Monto de pago: Lps. ${this.state.monto}`}
+              <br/>
+              {(new Date(this.state.serverTime)).toString()}
             </Typography>
             <br/>
           </CardContent>

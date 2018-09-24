@@ -42,6 +42,7 @@ class Pagos extends Component {
             clave={this.state.pagos[key].clave}
             monto={this.state.pagos[key].monto}
             telefono={this.state.pagos[key].telefono}
+            serverTime={this.state.pagos[key].serverTime}
             uid={this.state.pagos[key].uid}
           />
         );
