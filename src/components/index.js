@@ -19,6 +19,7 @@ import Button from '@material-ui/core/Button';
 import { Toolbar, Typography } from '../../node_modules/@material-ui/core';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
+import Map from './Map.js'
 
 const styles = {
   root: {
@@ -150,7 +151,12 @@ class App extends Component {
       <h1>Loading</h1>
     ) : (
           <div className={this.classes.root} style={{ backgroundColor: '#F6BB42' }}>
-
+            
+            
+          
+            <Map></Map>
+            
+            
             <AppBar position="static" style={{ backgroundColor: '#cc0000' }}>
               <Toolbar>
                 <IconButton  className={this.classes.menuButton} color="inherit" aria-label="Menu">
