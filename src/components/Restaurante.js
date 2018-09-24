@@ -99,8 +99,22 @@ class Restaurante extends Component {
   }
 
   getRating() {
-    const pos = this.state.rating.positivas;
-    const neg = this.state.rating.negativas;
+    const posObj = this.state.rating.positivas;
+    const negObj = this.state.rating.negativas;
+    var pos = 0;
+    var neg = 0;
+
+    for (let key in posObj) {
+      if (posObj[key]) {
+        pos++;
+      }
+    }
+
+    for (let key in negObj) {
+      if (negObj[key]) {
+        neg++;
+      }
+    }
 
     if (neg === 0 && pos === 0) {
       return (

@@ -37,14 +37,19 @@ class NuevoRestaurante extends Component {
 
   handleSubmit(event) {
     event.preventDefault();
+    var pos = {};
+    pos[this.state.currentUser.uid] = false;
+    var neg = {};
+    neg[this.state.currentUser.uid] = false;
+
     const newRest = {
       direccion: this.state.direccion,
       urlImagen: this.state.urlImagen,
       nombre: this.state.nombre,
       owner: this.state.currentUser.uid,
       rating: {
-        positivas: 0,
-        negativas: 0
+        positivas: pos,
+        negativas: neg
       },
       ordenes: {},
     };
