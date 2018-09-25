@@ -154,7 +154,6 @@ class App extends Component {
             
             
           
-            <Map></Map>
             
             
             <AppBar position="static" style={{ backgroundColor: '#cc0000' }}>

@@ -9,7 +9,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import CardMedia from '@material-ui/core/CardMedia';
 import firebase from '../config/constants';
 import './idk.css';
-
+import Map from './Map'
 const styles = {
   card: {
     maxWidth: 345,

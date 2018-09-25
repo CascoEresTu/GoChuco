@@ -7,6 +7,7 @@ import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import firebase from '../../config/constants';
 import '../idk.css';
+import Map from '../../components/Map';
 
 const styles = theme => ({
   root: {
@@ -107,6 +108,7 @@ class NuevoRestaurante extends Component {
                   &nbsp;{this.state.registerError}
                 </div>
               )}
+              <br/>
               <br/>
               <Button type="submit">Confirmar</ Button>
             </form>

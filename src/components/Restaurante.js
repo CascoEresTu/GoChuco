@@ -11,6 +11,7 @@ import StarIcon from '@material-ui/icons/Star';
 import OrdenButton from './OrdenButton';
 import firebase from './../config/constants';
 import './idk.css';
+import Map from './Map'
 
 const styles = {
   card: {
@@ -91,9 +92,11 @@ class Restaurante extends Component {
       }
     }
 
-    return (
+    return ( 
       <CardActions>
         {ordenes}
+       
+        
       </CardActions>
     );
   }

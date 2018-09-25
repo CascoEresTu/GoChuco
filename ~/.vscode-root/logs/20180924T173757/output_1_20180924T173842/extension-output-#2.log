@@ -37,3 +37,24 @@ or globally using 'npm install -g eslint'. You need to reopen the workspace afte
 If you are using yarn instead of npm set the setting `"eslint.packageManager": "yarn"`
 
 Alternatively you can disable ESLint for the workspace folder GoChuco by executing the 'Disable ESLint' command.
+[Info  - 6:01:50 PM] ESLint library loaded from: /home/carlos/Documents/GoChuco/node_modules/eslint/lib/api.js
+[Warn  - 6:01:50 PM] 
+No ESLint configuration (e.g .eslintrc) found for file: /home/carlos/Documents/GoChuco/src/components/Orden.js
+File will not be validated. Consider running 'eslint --init' in the workspace folder GoChuco
+Alternatively you can disable ESLint by executing the 'Disable ESLint' command.
+[Warn  - 6:02:57 PM] 
+No ESLint configuration (e.g .eslintrc) found for file: /home/carlos/Documents/GoChuco/src/components/Restaurante.js
+File will not be validated. Consider running 'eslint --init' in the workspace folder GoChuco
+Alternatively you can disable ESLint by executing the 'Disable ESLint' command.
+[Warn  - 6:06:46 PM] 
+No ESLint configuration (e.g .eslintrc) found for file: /home/carlos/Documents/GoChuco/src/components/Inicio.js
+File will not be validated. Consider running 'eslint --init' in the workspace folder GoChuco
+Alternatively you can disable ESLint by executing the 'Disable ESLint' command.
+[Warn  - 6:06:47 PM] 
+No ESLint configuration (e.g .eslintrc) found for file: /home/carlos/Documents/GoChuco/src/components/Login.js
+File will not be validated. Consider running 'eslint --init' in the workspace folder GoChuco
+Alternatively you can disable ESLint by executing the 'Disable ESLint' command.
+[Warn  - 6:06:57 PM] 
+No ESLint configuration (e.g .eslintrc) found for file: /home/carlos/Documents/GoChuco/src/components/protected/NuevoRestaurante.js
+File will not be validated. Consider running 'eslint --init' in the workspace folder GoChuco
+Alternatively you can disable ESLint by executing the 'Disable ESLint' command.
